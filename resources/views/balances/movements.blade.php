@@ -1,0 +1,8 @@
+@extends('layouts.admin')
+@section('title', 'Mutasi stok')
+@section('content')
+<a href="{{ route('balances.stock') }}" class="text-sm text-emerald-800">← Stok sampah</a><h1 class="mt-4 text-3xl font-bold">Mutasi stok</h1><p class="mt-3">{{ $wasteType->name }}</p>
+<div class="mt-6 overflow-x-auto rounded-xl border border-emerald-100 bg-white"><table class="w-full text-left text-sm"><thead class="bg-emerald-50"><tr>@foreach(['Waktu (WIB)', 'Jenis mutasi', 'Berat (kg)', 'Referensi', 'Pencatat'] as $label)<th class="px-5 py-4">{{ $label }}</th>@endforeach</tr></thead><tbody class="divide-y divide-slate-100">
+@forelse($movements as $movement)<tr><td class="whitespace-nowrap px-5 py-4">{{ $movement->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') }}</td><td class="px-5 py-4">{{ ['deposit_in' => 'Setoran masuk', 'deposit_reversal' => 'Pembatalan setoran', 'sale_out' => 'Penjualan keluar', 'sale_reversal' => 'Pembatalan penjualan'][$movement->movement_type] }}</td><td class="px-5 py-4">{{ $movement->weight_signed }}</td><td class="px-5 py-4">@if($movement->depositItem)<a class="text-emerald-800 underline" href="{{ route('deposits.show', $movement->depositItem->deposit) }}">{{ $movement->depositItem->deposit->deposit_number }}</a>@else Detail penjualan #{{ $movement->sale_item_id }} @endif</td><td class="px-5 py-4">{{ $movement->createdBy->name }}</td></tr>@empty<tr><td colspan="5" class="p-8 text-center text-slate-500">Belum ada mutasi stok.</td></tr>@endforelse
+</tbody></table></div><div class="mt-5">{{ $movements->links() }}</div>
+@endsection

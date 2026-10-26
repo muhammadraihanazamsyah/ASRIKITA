@@ -1,0 +1,8 @@
+@extends('layouts.admin')
+@section('title', 'Mutasi tabungan')
+@section('content')
+<a href="{{ route('balances.members') }}" class="text-sm text-emerald-800">← Tabungan nasabah</a><h1 class="mt-4 text-3xl font-bold">Mutasi tabungan</h1><p class="mt-3">{{ $member->member_code }} — {{ $member->full_name }}</p><p class="mt-4 text-xl font-bold">Saldo saat ini: {{ \App\Support\DepositInput::rupiah($balance) }}</p>
+<div class="mt-6 overflow-x-auto rounded-xl border border-emerald-100 bg-white"><table class="w-full text-left text-sm"><thead class="bg-emerald-50"><tr>@foreach(['Waktu (WIB)', 'Setoran', 'Jenis mutasi', 'Nilai', 'Pencatat'] as $label)<th class="px-5 py-4">{{ $label }}</th>@endforeach</tr></thead><tbody class="divide-y divide-slate-100">
+@forelse($entries as $entry)<tr><td class="whitespace-nowrap px-5 py-4">{{ $entry->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') }}</td><td class="px-5 py-4"><a class="text-emerald-800 underline" href="{{ route('deposits.show', $entry->deposit) }}">{{ $entry->deposit->deposit_number }}</a></td><td class="px-5 py-4">{{ $entry->entry_type === 'deposit_credit' ? 'Kredit setoran' : 'Mutasi balik' }}</td><td class="whitespace-nowrap px-5 py-4">{{ \App\Support\DepositInput::rupiah($entry->amount_signed) }}</td><td class="px-5 py-4">{{ $entry->createdBy->name }}</td></tr>@empty<tr><td colspan="5" class="p-8 text-center text-slate-500">Belum ada mutasi tabungan.</td></tr>@endforelse
+</tbody></table></div><div class="mt-5">{{ $entries->links() }}</div>
+@endsection
