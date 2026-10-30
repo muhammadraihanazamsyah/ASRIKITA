@@ -17,6 +17,6 @@ class ExampleTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('ASRIKITA');
         $response->assertSee('bukan aplikasi resmi');
-        $response->assertSee('belum tersedia');
+        $response->assertSee('laporan periode');
     }
 }

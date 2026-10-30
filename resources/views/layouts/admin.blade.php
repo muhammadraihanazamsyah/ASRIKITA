@@ -24,6 +24,7 @@
             <a href="{{ route('sales.index') }}" class="rounded-lg px-4 py-2 hover:bg-emerald-50">Penjualan</a>
             <a href="{{ route('balances.members') }}" class="rounded-lg px-4 py-2 hover:bg-emerald-50">Tabungan</a>
             <a href="{{ route('balances.stock') }}" class="rounded-lg px-4 py-2 hover:bg-emerald-50">Stok</a>
+            <a href="{{ route('reports.index') }}" class="rounded-lg px-4 py-2 hover:bg-emerald-50">Laporan</a>
         </div>
     </nav>
     <main class="mx-auto max-w-6xl px-5 py-9">

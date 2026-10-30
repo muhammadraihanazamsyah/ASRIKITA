@@ -14,7 +14,7 @@
             <p class="mt-5 text-lg leading-relaxed">Sistem informasi manajemen operasional bank sampah.</p>
             <p class="mt-3 leading-relaxed text-slate-600">Prototipe akademik Capstone Universitas Terbuka untuk studi kasus Bank Sampah Asri, Malaka Sari, Jakarta Timur.</p>
             <div class="mt-8 rounded-xl bg-emerald-50 p-5 text-sm leading-relaxed text-emerald-950">
-                Login, master data, setoran, tabungan, stok, penjualan, dan pembatalan transaksi sudah tersedia. Dashboard statistik dan laporan belum tersedia.
+                Login, master data, transaksi, pembatalan, dashboard statistik, laporan periode, dan ekspor CSV sudah tersedia untuk data simulasi.
             </div>
             <a href="{{ route('login') }}" class="mt-6 inline-block rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800">Masuk sebagai pengelola</a>
             <div x-data="{ expanded: false }" class="mt-6">
