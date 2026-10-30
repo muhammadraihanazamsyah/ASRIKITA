@@ -7,6 +7,7 @@ use App\Http\Controllers\DepositController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\WithdrawalController;
 use App\Support\MasterData;
 use Illuminate\Support\Facades\Route;
 
@@ -45,8 +46,13 @@ Route::middleware(['auth', 'active', 'role:admin,staff'])->group(function () {
     Route::post('/penjualan', [SaleController::class, 'store'])->name('sales.store');
     Route::get('/penjualan/{sale}', [SaleController::class, 'show'])->whereNumber('sale')->name('sales.show');
     Route::patch('/penjualan/{sale}/batalkan', [SaleController::class, 'destroy'])->whereNumber('sale')->name('sales.destroy');
+    Route::get('/penarikan', [WithdrawalController::class, 'index'])->name('withdrawals.index');
+    Route::get('/penarikan/tambah', [WithdrawalController::class, 'create'])->name('withdrawals.create');
+    Route::post('/penarikan', [WithdrawalController::class, 'store'])->name('withdrawals.store');
+    Route::get('/penarikan/{withdrawal}', [WithdrawalController::class, 'show'])->whereNumber('withdrawal')->name('withdrawals.show');
+    Route::patch('/penarikan/{withdrawal}/batalkan', [WithdrawalController::class, 'destroy'])->middleware('role:admin')->whereNumber('withdrawal')->name('withdrawals.destroy');
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/laporan/ekspor/{report}', [ReportController::class, 'export'])->whereIn('report', ['deposits', 'sales', 'stock-movements'])->name('reports.export');
+    Route::get('/laporan/ekspor/{report}', [ReportController::class, 'export'])->whereIn('report', ['deposits', 'sales', 'withdrawals', 'stock-movements'])->name('reports.export');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/dashboard', [DashboardController::class, 'show'])->middleware('role:admin')->name('admin.dashboard');
     Route::get('/petugas/dashboard', [DashboardController::class, 'show'])->middleware('role:staff')->name('staff.dashboard');

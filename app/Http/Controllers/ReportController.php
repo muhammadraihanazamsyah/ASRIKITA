@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Deposit;
 use App\Models\Sale;
 use App\Models\StockMovement;
+use App\Models\Withdrawal;
 use App\Support\ReportPeriod;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -19,11 +20,14 @@ class ReportController extends Controller
         $period = ReportPeriod::from($request);
         $deposits = $this->depositQuery($period);
         $sales = $this->saleQuery($period);
+        $withdrawals = $this->withdrawalQuery($period);
         $summary = [
             'deposit_count' => (clone $deposits)->count(),
             'deposit_amount' => (int) (clone $deposits)->where('status', 'posted')->sum('total_amount'),
             'sale_count' => (clone $sales)->count(),
             'sale_amount' => (int) (clone $sales)->where('status', 'posted')->sum('total_amount'),
+            'withdrawal_count' => (clone $withdrawals)->count(),
+            'withdrawal_amount' => (int) (clone $withdrawals)->where('status', 'posted')->sum('amount'),
             'movement_count' => $this->movementQuery($period)->count(),
         ];
 
@@ -32,7 +36,7 @@ class ReportController extends Controller
 
     public function export(Request $request, string $report): StreamedResponse
     {
-        abort_unless(in_array($report, ['deposits', 'sales', 'stock-movements'], true), 404);
+        abort_unless(in_array($report, ['deposits', 'sales', 'withdrawals', 'stock-movements'], true), 404);
         $period = ReportPeriod::from($request);
         $filename = "asrikita-{$report}-{$period->startDate}-{$period->endDate}.csv";
 
@@ -43,6 +47,8 @@ class ReportController extends Controller
                 $this->writeDepositCsv($handle, $period);
             } elseif ($report === 'sales') {
                 $this->writeSaleCsv($handle, $period);
+            } elseif ($report === 'withdrawals') {
+                $this->writeWithdrawalCsv($handle, $period);
             } else {
                 $this->writeMovementCsv($handle, $period);
             }
@@ -63,6 +69,24 @@ class ReportController extends Controller
     private function movementQuery(ReportPeriod $period): Builder
     {
         return StockMovement::query()->whereBetween('created_at', [$period->startUtc, $period->endUtc]);
+    }
+
+    private function withdrawalQuery(ReportPeriod $period): Builder
+    {
+        return Withdrawal::query()->whereBetween('created_at', [$period->startUtc, $period->endUtc]);
+    }
+
+    private function writeWithdrawalCsv($handle, ReportPeriod $period): void
+    {
+        fputcsv($handle, ['Nomor penarikan', 'Waktu WIB', 'Status', 'Kode nasabah', 'Nama nasabah', 'Nominal', 'Catatan', 'Pencatat', 'Waktu pembatalan WIB', 'Alasan pembatalan', 'Pembatal']);
+        foreach ($this->withdrawalQuery($period)->with(['member', 'recordedBy', 'cancelledBy'])->orderBy('created_at')->cursor() as $withdrawal) {
+            fputcsv($handle, $this->safeRow([
+                $withdrawal->withdrawal_number, $withdrawal->created_at->timezone('Asia/Jakarta')->format('Y-m-d H:i:s'), $withdrawal->status,
+                $withdrawal->member->member_code, $withdrawal->member->full_name, $withdrawal->amount, $withdrawal->notes,
+                $withdrawal->recordedBy->name, $withdrawal->cancelled_at?->timezone('Asia/Jakarta')->format('Y-m-d H:i:s'),
+                $withdrawal->cancellation_reason, $withdrawal->cancelledBy?->name,
+            ]));
+        }
     }
 
     private function writeDepositCsv($handle, ReportPeriod $period): void

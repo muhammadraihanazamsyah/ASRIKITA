@@ -17,7 +17,7 @@ class BalanceController extends Controller
 
     public function member(Member $member): View
     {
-        $entries = $member->ledgerEntries()->with(['deposit', 'createdBy'])->orderByDesc('created_at')->orderByDesc('id')->paginate(20);
+        $entries = $member->ledgerEntries()->with(['deposit', 'withdrawal', 'createdBy'])->orderByDesc('created_at')->orderByDesc('id')->paginate(20);
         $balance = $member->balanceIdr();
 
         return view('balances.ledger', compact('member', 'entries', 'balance'));

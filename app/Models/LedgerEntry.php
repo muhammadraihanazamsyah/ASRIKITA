@@ -27,6 +27,11 @@ class LedgerEntry extends Model
         return $this->belongsTo(Deposit::class);
     }
 
+    public function withdrawal(): BelongsTo
+    {
+        return $this->belongsTo(Withdrawal::class);
+    }
+
     public function originalEntry(): BelongsTo
     {
         return $this->belongsTo(self::class, 'reversal_of_id');

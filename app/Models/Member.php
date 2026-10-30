@@ -25,6 +25,11 @@ class Member extends Model
         return $this->hasMany(LedgerEntry::class);
     }
 
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
+
     public function balanceIdr(): int
     {
         return (int) $this->ledgerEntries()->sum('amount_signed');

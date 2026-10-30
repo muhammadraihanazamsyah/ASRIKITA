@@ -139,3 +139,11 @@ Buat akun pertama dengan `php artisan asrikita:create-operator`, pilih peran dan
 - Tabungan dan stok dihitung dari histori mutasi serta tersedia sebagai halaman baca saja.
 - Seluruh suite saat tahap ini: 40 tes lolos, 452 assertions. Uji dua proses bersamaan menghasilkan tepat satu setoran, satu kredit, dan satu mutasi stok per item.
 - Build frontend dan pemeriksaan browser desktop/mobile berhasil tanpa error JavaScript atau overflow halaman.
+
+## Hasil modul penarikan tabungan (31 Oktober 2026)
+
+- Administrator dan petugas dapat mencatat penarikan nasabah aktif setelah saldo diverifikasi dari ledger.
+- Penarikan menulis debit tabungan secara atomik dan tidak mengubah stok; idempotensi mencegah penyimpanan ganda.
+- Pembatalan hanya tersedia untuk administrator dan mengembalikan saldo melalui kredit mutasi balik yang diaudit.
+- Daftar, detail, riwayat tabungan, ringkasan laporan, dan ekspor CSV penarikan tersedia untuk pengujian internal.
+- Uji konkurensi dua proses tersedia melalui `php tests/Concurrency/run_withdrawal.php` dan memakai schema PostgreSQL sementara.

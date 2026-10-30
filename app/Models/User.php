@@ -27,6 +27,16 @@ class User extends Authenticatable
         return $this->hasMany(Sale::class, 'staff_id');
     }
 
+    public function recordedWithdrawals(): HasMany
+    {
+        return $this->hasMany(Withdrawal::class, 'recorded_by');
+    }
+
+    public function cancelledWithdrawals(): HasMany
+    {
+        return $this->hasMany(Withdrawal::class, 'cancelled_by');
+    }
+
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuditLog::class, 'actor_id');
