@@ -33,7 +33,7 @@ class AuthenticationTest extends PostgreSqlTestCase
         $this->assertNotSame($oldSession, session()->getId());
         $this->assertNotNull($user->fresh()->remember_token);
         $this->get(route('dashboard'))->assertRedirect(route('admin.dashboard'));
-        $this->get(route('admin.dashboard'))->assertOk()->assertSee('Pengelolaan pengguna');
+        $this->get(route('admin.dashboard'))->assertOk()->assertSee('Registrasi dan pengelolaan akun');
         $this->get(route('staff.dashboard'))->assertForbidden();
     }
 
