@@ -32,7 +32,7 @@ class BalanceController extends Controller
 
     public function movements(WasteType $wasteType): View
     {
-        $movements = $wasteType->stockMovements()->with(['depositItem.deposit', 'createdBy'])->orderByDesc('created_at')->orderByDesc('id')->paginate(20);
+        $movements = $wasteType->stockMovements()->with(['depositItem.deposit', 'saleItem.sale', 'createdBy'])->orderByDesc('created_at')->orderByDesc('id')->paginate(20);
 
         return view('balances.movements', compact('wasteType', 'movements'));
     }

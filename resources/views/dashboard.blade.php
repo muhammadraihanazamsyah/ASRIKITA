@@ -27,8 +27,9 @@
                 @endforeach
             </nav>
         @endif
-        <nav aria-label="Transaksi dan saldo" class="mt-6 grid gap-4 sm:grid-cols-3">
+        <nav aria-label="Transaksi dan saldo" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <a href="{{ route('deposits.index') }}" class="rounded-xl border border-emerald-200 bg-white p-6 font-semibold text-emerald-900">Pencatatan setoran →</a>
+            <a href="{{ route('sales.index') }}" class="rounded-xl border border-emerald-200 bg-white p-6 font-semibold text-emerald-900">Penjualan ke pengepul →</a>
             <a href="{{ route('balances.members') }}" class="rounded-xl border border-emerald-200 bg-white p-6 font-semibold text-emerald-900">Tabungan nasabah →</a>
             <a href="{{ route('balances.stock') }}" class="rounded-xl border border-emerald-200 bg-white p-6 font-semibold text-emerald-900">Stok sampah →</a>
         </nav>
@@ -37,7 +38,7 @@
             <h2 id="status-title" class="mt-3 text-xl font-bold">Ruang kerja sedang disiapkan</h2>
             <p class="mt-3 max-w-2xl leading-relaxed text-slate-600">Login dan akses berdasarkan peran sudah tersedia. Modul operasional berikut belum tersedia dan akan ditambahkan secara bertahap.</p>
             <ul class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-                @foreach ($isAdmin ? ['Pengelolaan pengguna', 'Penjualan ke pengepul', 'Pembatalan transaksi', 'Laporan operasional'] : ['Penjualan ke pengepul', 'Pembatalan transaksi', 'Laporan operasional'] as $module)
+                @foreach ($isAdmin ? ['Pengelolaan pengguna', 'Laporan operasional'] : ['Laporan operasional'] as $module)
                     <li class="flex items-center justify-between gap-4 rounded-lg bg-slate-50 px-4 py-3"><span>{{ $module }}</span><span class="shrink-0 text-xs text-slate-500">Belum tersedia</span></li>
                 @endforeach
             </ul>

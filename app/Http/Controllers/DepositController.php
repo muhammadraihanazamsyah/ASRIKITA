@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDepositRequest;
+use App\Http\Requests\VoidTransactionRequest;
 use App\Models\Deposit;
 use App\Models\Member;
 use App\Models\WasteType;
 use App\Services\DepositService;
+use App\Services\TransactionReversalService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -44,9 +46,16 @@ class DepositController extends Controller
 
     public function show(Deposit $deposit): View
     {
-        $deposit->load(['member', 'staff', 'items.wasteType', 'ledgerEntries']);
+        $deposit->load(['member', 'staff', 'voidedBy', 'items.wasteType', 'ledgerEntries']);
         $balance = $deposit->member->balanceIdr();
 
         return view('deposits.show', compact('deposit', 'balance'));
+    }
+
+    public function destroy(VoidTransactionRequest $request, Deposit $deposit, TransactionReversalService $service): RedirectResponse
+    {
+        $service->voidDeposit($deposit, $request->validated('reason'), $request->user());
+
+        return redirect()->route('deposits.show', $deposit)->with('status', 'Setoran dibatalkan. Saldo dan stok telah dicatat melalui mutasi balik.');
     }
 }
