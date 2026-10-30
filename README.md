@@ -58,9 +58,13 @@ Pengujian awal memeriksa halaman dan boot aplikasi; hasilnya bukan bukti integri
 
 Dokumentasi schema, keputusan penyelarasan sumber, batas integritas, dan cara menjalankan tes PostgreSQL: [docs/database-v1.md](docs/database-v1.md).
 
-Tahap 1 dan fondasi database tahap 2 tersedia. Tahap 3 menyediakan login/logout pengelola, pemeriksaan status akun, otorisasi admin/petugas, dan dashboard per peran. Tahap 4 menyediakan master nasabah, jenis/harga sampah, dan pengepul beserta audit perubahan. Service transaksi dan laporan belum tersedia. Ikuti `AGENTS.md` untuk aturan pengembangan.
+Tahap 1 dan fondasi database tahap 2 tersedia. Tahap 3 menyediakan login/logout pengelola, pemeriksaan status akun, otorisasi admin/petugas, dan dashboard per peran. Tahap 4 menyediakan master nasabah, jenis/harga sampah, dan pengepul beserta audit perubahan. Tahap 5 mencakup setoran, ledger tabungan, mutasi stok, penjualan, dan pembatalan. Tahap 6 menyediakan dashboard statistik, grafik, filter periode, laporan, dan ekspor CSV. Ikuti `AGENTS.md` untuk aturan pengembangan.
 
 Panduan master data: [docs/master-data.md](docs/master-data.md). Login sebagai admin lalu gunakan menu master pada dashboard. Record dinonaktifkan melalui status agar riwayat tetap terjaga.
+
+Panduan transaksi: [docs/deposits.md](docs/deposits.md), [docs/sales.md](docs/sales.md), dan [docs/transaction-reversals.md](docs/transaction-reversals.md). Administrator maupun petugas aktif dapat mencatat serta membatalkan transaksi melalui dashboard.
+
+Panduan dashboard dan laporan: [docs/dashboard-reports.md](docs/dashboard-reports.md).
 
 ## Login pengelola
 
@@ -99,3 +103,39 @@ Buat akun pertama dengan `php artisan asrikita:create-operator`, pilih peran dan
 - Seluruh suite: 31 tes lolos, 325 assertions; build frontend dan pemeriksaan browser desktop/mobile berhasil.
 - Tidak memerlukan migration tambahan. Data QA browser dibuat pada schema terpisah dan sudah dibersihkan.
 - Berikutnya: transaksi setoran multi-item, ledger tabungan, dan mutasi stok.
+
+## Hasil penjualan ke pengepul (30 Oktober 2026)
+
+- Penjualan multi-item menyimpan snapshot harga jual dan mengurangi stok melalui mutasi `sale_out` dalam satu database transaction.
+- Stok dihitung ulang dan jenis sampah dikunci saat penyimpanan sehingga transaksi ditolak sebelum stok menjadi negatif.
+- Idempotensi mencegah pengiriman ulang mencatat penjualan dan pengurangan stok lebih dari satu kali.
+- Daftar, pencarian, detail, dan referensi penjualan pada riwayat mutasi stok tersedia bagi administrator dan petugas.
+- Tes khusus modul: 6 tes lolos, 92 assertions. Seluruh suite: 46 tes lolos, 544 assertions; build Vite berhasil. Tidak memerlukan migration tambahan.
+- Berikutnya: pembatalan setoran dan penjualan menggunakan mutasi balik yang dapat diaudit.
+
+## Hasil pembatalan transaksi (30 Oktober 2026)
+
+- Setoran dapat dibatalkan melalui debit ledger dan mutasi stok berlawanan, selama stok item masih mencukupi.
+- Penjualan dapat dibatalkan dengan mutasi yang mengembalikan stok tanpa mengubah saldo nasabah.
+- Alasan, waktu, dan petugas pembatalan tersimpan pada transaksi; audit ditulis dalam database transaction yang sama.
+- Retry identik tidak menggandakan mutasi, sedangkan pembatalan kedua dengan data berbeda ditolak.
+- Tes khusus modul: 6 tes lolos, 78 assertions. Seluruh suite: 52 tes lolos, 622 assertions; build Vite berhasil. Tidak memerlukan migration tambahan.
+- Berikutnya: dashboard statistik, filter periode, dan laporan CSV.
+
+## Hasil dashboard dan laporan (30 Oktober 2026)
+
+- Dashboard menampilkan statistik transaksi aktif, berat, stok terkini, nasabah aktif, transaksi terbaru, dan grafik nilai harian dengan Chart.js.
+- Filter tanggal menggunakan zona waktu Asia/Jakarta dan dibatasi maksimal 366 hari.
+- Laporan setoran, penjualan, dan mutasi stok dapat diekspor sebagai CSV UTF-8 dengan data detail serta status pembatalan.
+- CSV melindungi teks dari formula injection spreadsheet tanpa mengubah angka berat bertanda.
+- Tes khusus modul: 5 tes lolos, 45 assertions. Seluruh suite: 57 tes lolos, 667 assertions; build Vite berhasil dan audit npm melaporkan 0 vulnerabilities. Tidak memerlukan migration tambahan.
+- QA browser memverifikasi grafik dirender, halaman laporan terbuka, CSV dapat diunduh, tidak ada error JavaScript, dan dashboard mobile tidak mengalami overflow horizontal.
+- Berikutnya: QA browser menyeluruh, black-box testing, dan persiapan deployment.
+
+## Hasil setoran, tabungan, dan stok (26 Oktober 2026)
+
+- Setoran multi-item menyimpan snapshot harga beli, kredit tabungan, mutasi stok, dan audit secara atomik.
+- Validasi presisi berat, pembulatan rupiah, perubahan harga, master aktif, dan idempotensi diterapkan pada server.
+- Tabungan dan stok dihitung dari histori mutasi serta tersedia sebagai halaman baca saja.
+- Seluruh suite saat tahap ini: 40 tes lolos, 452 assertions. Uji dua proses bersamaan menghasilkan tepat satu setoran, satu kredit, dan satu mutasi stok per item.
+- Build frontend dan pemeriksaan browser desktop/mobile berhasil tanpa error JavaScript atau overflow halaman.
