@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Detail setoran')
 @section('content')
 <a href="{{ route('deposits.index') }}" class="text-sm font-semibold text-emerald-800">← Daftar setoran</a>

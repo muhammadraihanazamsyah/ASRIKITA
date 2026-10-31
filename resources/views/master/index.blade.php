@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', $definition['title'])
 @section('content')
     <div class="flex flex-wrap items-center justify-between gap-4">

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Stok sampah')
 @section('content')
 <h1 class="text-3xl font-bold">Stok sampah</h1><p class="mt-3 text-sm text-slate-600">Stok berasal dari jumlah mutasi inventori; satuan kilogram.</p>

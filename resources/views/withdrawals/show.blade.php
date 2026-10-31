@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Detail penarikan')
 @section('content')
 <a href="{{ route('withdrawals.index') }}" class="text-sm text-emerald-800">← Daftar penarikan</a><div class="mt-4 flex flex-wrap items-start justify-between gap-4"><div><h1 class="text-3xl font-bold">{{ $withdrawal->withdrawal_number }}</h1><p class="mt-2">{{ $withdrawal->member->member_code }} — {{ $withdrawal->member->full_name }}</p></div><span class="rounded-full px-3 py-1 text-sm font-semibold {{ $withdrawal->status === 'posted' ? 'bg-emerald-100 text-emerald-900' : 'bg-red-100 text-red-800' }}">{{ $withdrawal->status === 'posted' ? 'Aktif' : 'Dibatalkan' }}</span></div>

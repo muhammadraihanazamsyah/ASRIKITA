@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Laporan')
 @section('content')
 <h1 class="text-3xl font-bold">Laporan operasional</h1><p class="mt-3 text-sm text-slate-600">Pilih periode maksimal 366 hari. Ringkasan nilai hanya menghitung transaksi aktif; CSV tetap menyertakan transaksi batal untuk kebutuhan audit.</p>

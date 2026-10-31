@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', ($record->exists ? 'Ubah ' : 'Tambah ').$definition['title'])
 @section('content')
     <a href="{{ route('admin.master.index', $resource) }}" class="text-sm font-semibold text-emerald-800 hover:underline">← Kembali ke daftar</a>

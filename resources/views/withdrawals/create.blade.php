@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Catat penarikan')
 @section('content')
 <a href="{{ route('withdrawals.index') }}" class="text-sm text-emerald-800">← Daftar penarikan</a><h1 class="mt-4 text-3xl font-bold">Catat penarikan tabungan</h1><p class="mt-3 text-sm text-slate-600">Pastikan uang telah diserahkan kepada nasabah sebelum transaksi disimpan.</p>

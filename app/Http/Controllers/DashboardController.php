@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Deposit;
 use App\Models\DepositItem;
+use App\Models\LedgerEntry;
 use App\Models\Member;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\StockMovement;
+use App\Models\WasteType;
 use App\Support\ReportPeriod;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,6 +37,7 @@ class DashboardController extends Controller
             'sale_weight' => (string) SaleItem::query()->whereHas('sale', fn ($query) => $query->where('status', 'posted')->tap($range))->sum('weight_kg'),
             'active_members' => Member::where('status', 'active')->count(),
             'stock_weight' => (string) (StockMovement::query()->selectRaw('COALESCE(SUM(weight_signed), 0)::text AS total')->value('total') ?? '0.000'),
+            'total_balance' => (int) LedgerEntry::query()->sum('amount_signed'),
         ];
         $depositTrend = (clone $deposits)->selectRaw("(occurred_at AT TIME ZONE 'Asia/Jakarta')::date::text AS day, SUM(total_amount)::bigint AS total")
             ->groupBy('day')->pluck('total', 'day');
@@ -48,11 +51,15 @@ class DashboardController extends Controller
         }
         $recentDeposits = Deposit::with('member')->latest('occurred_at')->limit(5)->get();
         $recentSales = Sale::with('collector')->latest('occurred_at')->limit(5)->get();
+        $stockBreakdown = WasteType::query()->where('is_active', true)
+            ->withSum('stockMovements as stock_kg', 'weight_signed')
+            ->orderByDesc('stock_kg')->limit(5)->get();
 
-        return view('dashboard', [
+        return view('dashboard-figma', [
             'isAdmin' => $request->user()->role === 'admin', 'period' => $period,
             'stats' => $stats, 'chart' => $chart, 'recentDeposits' => $recentDeposits,
             'recentSales' => $recentSales,
+            'stockBreakdown' => $stockBreakdown,
         ]);
     }
 }

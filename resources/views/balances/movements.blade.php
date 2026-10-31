@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Mutasi stok')
 @section('content')
 <a href="{{ route('balances.stock') }}" class="text-sm text-emerald-800">← Stok sampah</a><h1 class="mt-4 text-3xl font-bold">Mutasi stok</h1><p class="mt-3">{{ $wasteType->name }}</p>

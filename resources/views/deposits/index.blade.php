@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Setoran sampah')
 @section('content')
 <div class="flex flex-wrap items-center justify-between gap-4"><h1 class="text-3xl font-bold">Setoran sampah</h1><a href="{{ route('deposits.create') }}" class="rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white">+ Catat setoran</a></div>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Penjualan')
 @section('content')
 <div class="flex flex-wrap items-end justify-between gap-5"><div><h1 class="text-3xl font-bold">Penjualan ke pengepul</h1><p class="mt-3 text-sm text-slate-600">Penjualan yang tersimpan mengurangi stok tanpa mengubah saldo nasabah.</p></div><a href="{{ route('sales.create') }}" class="rounded-lg bg-[#123c2e] px-5 py-3 text-sm font-semibold text-white">+ Catat penjualan</a></div>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.figma')
 @section('title', 'Mutasi tabungan')
 @section('content')
 <a href="{{ route('balances.members') }}" class="text-sm text-emerald-800">← Tabungan nasabah</a><h1 class="mt-4 text-3xl font-bold">Mutasi tabungan</h1><p class="mt-3">{{ $member->member_code }} — {{ $member->full_name }}</p><p class="mt-4 text-xl font-bold">Saldo saat ini: {{ \App\Support\DepositInput::rupiah($balance) }}</p>
