@@ -21,6 +21,44 @@ class AuthenticationTest extends PostgreSqlTestCase
             $this->get(route($route))->assertRedirect(route('login'));
         }
         $this->get(route('login'))->assertOk()->assertSee('Selamat datang kembali')->assertSee('name="_token"', false);
+        $this->get(route('login'))->assertDontSee(route('register'));
+    }
+
+    public function test_guest_can_choose_operator_role_from_direct_registration_url(): void
+    {
+        $this->get('/register')->assertOk()->assertSee('Buat akun pengelola')->assertSee('Administrator');
+
+        $this->post(route('register.store'), [
+            'name' => '  DATA SIMULASI Petugas  ',
+            'email' => ' PETUGAS.BARU@EXAMPLE.TEST ',
+            'password' => 'TestPassword123!',
+            'password_confirmation' => 'TestPassword123!',
+            'role' => 'admin',
+            'status' => 'disabled',
+        ])->assertRedirect(route('dashboard'));
+
+        $user = User::where('email', 'petugas.baru@example.test')->firstOrFail();
+        $this->assertSame('DATA SIMULASI Petugas', $user->name);
+        $this->assertSame('admin', $user->role);
+        $this->assertSame('active', $user->status);
+        $this->assertTrue(Hash::check('TestPassword123!', $user->password));
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_registration_rejects_duplicate_email_and_weak_or_unconfirmed_password(): void
+    {
+        $this->operator('staff');
+
+        $this->post(route('register.store'), [
+            'name' => 'Petugas Baru',
+            'email' => 'OPERATOR@EXAMPLE.TEST',
+            'role' => 'owner',
+            'password' => 'lemah',
+            'password_confirmation' => 'berbeda',
+        ])->assertSessionHasErrors(['email', 'role', 'password'])->assertSessionMissing('_old_input.password');
+
+        $this->assertGuest();
+        $this->assertSame(1, User::count());
     }
 
     public function test_active_admin_can_login_and_receives_only_admin_dashboard(): void
