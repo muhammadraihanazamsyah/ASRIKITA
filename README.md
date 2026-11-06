@@ -56,7 +56,7 @@ Pengujian awal memeriksa halaman dan boot aplikasi; hasilnya bukan bukti integri
 
 ## Lingkup
 
-Dokumentasi schema, keputusan penyelarasan sumber, batas integritas, dan cara menjalankan tes PostgreSQL: [docs/database-v1.md](docs/database-v1.md).
+Dokumentasi lengkap struktur tabel, constraint, relasi, index, dan database view: [docs/database-structure.md](docs/database-structure.md).
 
 Tahap 1 dan fondasi database tahap 2 tersedia. Tahap 3 menyediakan login/logout pengelola, pemeriksaan status akun, otorisasi admin/petugas, dan dashboard per peran. Tahap 4 menyediakan master nasabah, jenis/harga sampah, dan pengepul beserta audit perubahan. Tahap 5 mencakup setoran, ledger tabungan, mutasi stok, penjualan, dan pembatalan. Tahap 6 menyediakan dashboard statistik, grafik, filter periode, laporan, dan ekspor CSV. Ikuti `AGENTS.md` untuk aturan pengembangan.
 
