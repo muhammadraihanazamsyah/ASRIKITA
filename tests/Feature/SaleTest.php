@@ -44,7 +44,7 @@ class SaleTest extends PostgreSqlTestCase
     public function test_multi_item_sale_reduces_stock_and_creates_snapshot_audit_and_read_pages(): void
     {
         [$actor, $collector, $first, $second, $data] = $this->fixture();
-        $this->get(route('sales.create'))->assertOk()->assertSee($collector->name)->assertSee('5.000 kg');
+        $this->get(route('sales.create'))->assertOk()->assertSee($collector->name)->assertSee('5 kg')->assertDontSee('5.000 kg');
         $this->post(route('sales.store'), $data + ['total_amount' => 1, 'staff_id' => 999, 'status' => 'void'])
             ->assertSessionHasNoErrors()->assertRedirect();
 
@@ -57,7 +57,7 @@ class SaleTest extends PostgreSqlTestCase
         $this->assertSame('1.167', $second->stockKg());
         $this->assertSame(4, StockMovement::count());
         $this->assertSame('sale.posted', AuditLog::where('entity_type', 'sales')->sole()->action);
-        $this->get(route('sales.show', $sale))->assertOk()->assertSee('Rp 3.835')->assertSee('Rp 1.500');
+        $this->get(route('sales.show', $sale))->assertOk()->assertSee('Rp 3.835')->assertSee('Rp 1.500')->assertSee('1,001');
         $this->get(route('sales.index', ['q' => 'pengepul jual']))->assertOk()->assertSee($sale->sale_number);
         $this->get(route('balances.stock'))->assertOk()->assertSee('3.999')->assertSee('1.167');
         $this->get(route('balances.movements', $first))->assertOk()->assertSee('Penjualan keluar')->assertSee($sale->sale_number);

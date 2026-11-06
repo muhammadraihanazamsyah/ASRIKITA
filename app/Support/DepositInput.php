@@ -48,6 +48,16 @@ class DepositInput
         return intdiv($grams, 1000).'.'.str_pad((string) ($grams % 1000), 3, '0', STR_PAD_LEFT);
     }
 
+    public static function weight(int|float|string $kilograms): string
+    {
+        $formatted = (string) $kilograms;
+        if (str_contains($formatted, '.')) {
+            $formatted = rtrim(rtrim($formatted, '0'), '.');
+        }
+
+        return str_replace('.', ',', $formatted === '' || $formatted === '-' ? '0' : $formatted);
+    }
+
     public static function amount(int $grams, int $price): int
     {
         // Validated bounds keep this integer product below PHP_INT_MAX.

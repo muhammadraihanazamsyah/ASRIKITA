@@ -24,7 +24,7 @@
                 <fieldset class="rounded-xl border border-emerald-100 bg-white p-5">
                     <legend class="px-2 text-sm font-bold text-emerald-900" x-text="'Item ' + (index + 1)"></legend>
                     <div class="grid gap-4 md:grid-cols-[2fr_1fr_1fr_1fr_auto] md:items-end">
-                        <div><label :for="'sale-waste-' + row.key" class="block text-sm font-semibold">Jenis sampah *</label><select :id="'sale-waste-' + row.key" :name="'items[' + index + '][waste_type_id]'" x-model="row.waste_type_id" required class="mt-2 w-full rounded-lg border border-slate-300 p-3 text-sm"><option value="">Pilih jenis</option>@foreach($types as $type)<option value="{{ $type->id }}">{{ $type->name }} — stok {{ $type->stock_kg }} kg</option>@endforeach</select><p class="mt-1 text-xs text-slate-500" x-show="type(row)" x-text="type(row) ? 'Tersedia ' + type(row).stock_kg + ' kg' : ''"></p></div>
+                        <div><label :for="'sale-waste-' + row.key" class="block text-sm font-semibold">Jenis sampah *</label><select :id="'sale-waste-' + row.key" :name="'items[' + index + '][waste_type_id]'" x-model="row.waste_type_id" required class="mt-2 w-full rounded-lg border border-slate-300 p-3 text-sm"><option value="">Pilih jenis</option>@foreach($types as $type)<option value="{{ $type->id }}">{{ $type->name }} — stok {{ $type->stock_label }} kg</option>@endforeach</select><p class="mt-1 text-xs text-slate-500" x-show="type(row)" x-text="type(row) ? 'Tersedia ' + type(row).stock_label + ' kg' : ''"></p></div>
                         <div><label :for="'sale-weight-' + row.key" class="block text-sm font-semibold">Berat (kg) *</label><input :id="'sale-weight-' + row.key" :name="'items[' + index + '][weight_kg]'" x-model="row.weight_kg" type="text" inputmode="decimal" required maxlength="11" placeholder="0.000" class="mt-2 w-full rounded-lg border border-slate-300 p-3 text-sm"></div>
                         <div><label :for="'sale-price-' + row.key" class="block text-sm font-semibold">Harga jual/kg *</label><input :id="'sale-price-' + row.key" :name="'items[' + index + '][sell_price]'" x-model="row.sell_price" type="number" inputmode="numeric" min="1" max="1000000000" required class="mt-2 w-full rounded-lg border border-slate-300 p-3 text-sm"></div>
                         <div><span class="text-xs text-slate-500">Nilai item</span><p class="mt-2 py-3 text-sm font-bold" x-text="money(amount(row))"></p></div>
@@ -33,7 +33,7 @@
                 </fieldset>
             </template>
             <button type="button" @click="add()" :disabled="rows.length >= 50" class="rounded-lg border border-emerald-700 px-5 py-3 text-sm font-semibold text-emerald-800 disabled:opacity-40">+ Tambah jenis sampah</button>
-            <p class="text-xs text-slate-500">Gunakan titik desimal untuk berat, misalnya 1.250. Setiap jenis hanya boleh satu kali dan berat tidak boleh melebihi stok.</p>
+            <p class="text-xs text-slate-500">Gunakan titik untuk berat desimal, misalnya 1.25. Setiap jenis hanya boleh satu kali dan berat tidak boleh melebihi stok.</p>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-5 rounded-xl bg-[#123c2e] p-6 text-white">
             <div><p class="text-sm text-emerald-100">Total nilai penjualan</p><p class="mt-2 text-3xl font-bold" aria-live="polite" data-testid="sale-total" x-text="money(total)">Rp 0</p></div>

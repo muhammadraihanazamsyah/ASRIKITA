@@ -34,7 +34,9 @@ class SaleController extends Controller
     {
         $collectors = Collector::where('is_active', true)->orderBy('name')->get(['id', 'name']);
         $types = WasteType::where('is_active', true)->withSum('stockMovements as stock_kg', 'weight_signed')->orderBy('name')->get(['id', 'name'])
-            ->filter(fn ($type) => DepositInput::grams((string) ($type->stock_kg ?? '0')) > 0)->values();
+            ->filter(fn ($type) => DepositInput::grams((string) ($type->stock_kg ?? '0')) > 0)
+            ->each(fn ($type) => $type->setAttribute('stock_label', DepositInput::weight($type->stock_kg)))
+            ->values();
         $key = (string) Str::uuid();
 
         return view('sales.create', compact('collectors', 'types', 'key'));

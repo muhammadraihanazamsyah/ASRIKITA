@@ -33,7 +33,7 @@
                 </fieldset>
             </template>
             <button type="button" @click="add()" :disabled="rows.length >= 50" class="rounded-lg border border-emerald-700 px-5 py-3 text-sm font-semibold text-emerald-800 disabled:opacity-40">+ Tambah jenis sampah</button>
-            <p class="text-xs text-slate-500">Gunakan titik desimal, misalnya 1.250. Setiap jenis hanya boleh satu kali. Maksimal 50 item dan 1.000.000 kg per item.</p>
+            <p class="text-xs text-slate-500">Gunakan titik untuk berat desimal, misalnya 1.25. Setiap jenis hanya boleh satu kali. Maksimal 50 item dan 1.000.000 kg per item.</p>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-5 rounded-xl bg-[#123c2e] p-6 text-white">
             <div><p class="text-sm text-emerald-100">Total kredit tabungan</p><p class="mt-2 text-3xl font-bold" aria-live="polite" data-testid="deposit-total" x-text="money(total)">Rp 0</p></div>

@@ -50,7 +50,7 @@ class DepositTest extends PostgreSqlTestCase
         $this->assertSame(2, StockMovement::count());
         $this->assertSame('deposit.posted', AuditLog::sole()->action);
         $this->assertSame($actor->id, (int) AuditLog::sole()->actor_id);
-        $this->get(route('deposits.show', $deposit))->assertOk()->assertSee('Rp 4.001')->assertSee('1.001');
+        $this->get(route('deposits.show', $deposit))->assertOk()->assertSee('Rp 4.001')->assertSee('1,001');
         $this->get(route('deposits.index', ['q' => 'sim-set']))->assertOk()->assertSee($deposit->deposit_number);
         $this->get(route('balances.members'))->assertOk()->assertSee('Rp 4.001');
         $this->get(route('balances.ledger', $member))->assertOk()->assertSee('Kredit setoran')->assertSee($deposit->deposit_number);
@@ -189,5 +189,7 @@ class DepositTest extends PostgreSqlTestCase
         $this->assertSame(0, DepositInput::amount(1, 499));
         $this->assertSame(1000000000000000, DepositInput::amount(1000000000, 1000000000));
         $this->assertSame('Rp 50.000.000.000.000.001', DepositInput::rupiah('50000000000000001'));
+        $this->assertSame('10', DepositInput::weight('10.000'));
+        $this->assertSame('1,25', DepositInput::weight('1.250'));
     }
 }
