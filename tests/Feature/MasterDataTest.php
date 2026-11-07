@@ -58,7 +58,8 @@ class MasterDataTest extends PostgreSqlTestCase
         $admin = $this->admin();
         $this->get(route('admin.master.index', 'nasabah'))->assertOk()->assertSee('Belum ada data yang cocok');
         $this->get(route('admin.master.create', 'nasabah'))->assertOk()->assertSee('Kode nasabah');
-        $this->post(route('admin.master.store', 'nasabah'), $this->payload('nasabah') + ['role' => 'admin', 'id' => 999])->assertSessionHasNoErrors()->assertRedirect();
+        $this->post(route('admin.master.store', 'nasabah'), $this->payload('nasabah') + ['role' => 'admin', 'id' => 999])
+            ->assertSessionHasNoErrors()->assertRedirect(route('admin.master.index', 'nasabah'));
         $member = Member::sole();
         $this->assertSame('SIM-NEW', $member->member_code);
         $this->assertNotSame(999, $member->id);
@@ -89,7 +90,8 @@ class MasterDataTest extends PostgreSqlTestCase
     {
         $this->admin();
         $this->get(route('admin.master.create', 'pengepul'))->assertOk();
-        $this->post(route('admin.master.store', 'pengepul'), $this->payload('pengepul'))->assertSessionHasNoErrors();
+        $this->post(route('admin.master.store', 'pengepul'), $this->payload('pengepul'))
+            ->assertSessionHasNoErrors()->assertRedirect(route('admin.master.index', 'pengepul'));
         $collector = Collector::sole();
         $this->get(route('admin.master.edit', ['pengepul', $collector->id]))->assertOk();
         $this->put(route('admin.master.update', ['pengepul', $collector->id]), ['name' => 'DATA SIMULASI Diperbarui', 'phone' => 'SIMULASI', 'is_active' => '0'])->assertSessionHasNoErrors();
@@ -105,7 +107,8 @@ class MasterDataTest extends PostgreSqlTestCase
     {
         $admin = $this->admin();
         $this->get(route('admin.master.create', 'jenis-sampah'))->assertOk();
-        $this->post(route('admin.master.store', 'jenis-sampah'), $this->payload('jenis-sampah') + ['unit' => 'ton', 'changed_by' => 999])->assertSessionHasNoErrors();
+        $this->post(route('admin.master.store', 'jenis-sampah'), $this->payload('jenis-sampah') + ['unit' => 'ton', 'changed_by' => 999])
+            ->assertSessionHasNoErrors()->assertRedirect(route('admin.master.index', 'jenis-sampah'));
         $waste = WasteType::sole();
         $history = WastePriceHistory::sole();
         $this->assertNull($history->old_buy_price);

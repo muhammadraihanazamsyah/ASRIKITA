@@ -48,9 +48,9 @@ class MasterDataController extends Controller
 
     public function store(MasterDataRequest $request, string $resource, MasterDataService $service): RedirectResponse
     {
-        $record = $service->save($resource, $request->validated(), $request->user());
+        $service->save($resource, $request->validated(), $request->user());
 
-        return redirect()->route('admin.master.edit', [$resource, $record->id])->with('status', 'Data berhasil ditambahkan.');
+        return redirect()->route('admin.master.index', $resource)->with('status', 'Data berhasil ditambahkan.');
     }
 
     public function edit(string $resource, int $record): View
